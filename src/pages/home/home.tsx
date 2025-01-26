@@ -9,6 +9,7 @@ import TravelCard from "../../../components/TravelCard/TravelCard";
 import { biggerCards, cards, sliderCards, travelCards } from "./cardsArray";
 import "./home.scss";
 import logo from "./logos/logo.png";
+import logo11 from "./logos/logo11.png";
 
 const Home = ({}) => {
   const settings = {
@@ -96,7 +97,7 @@ const Home = ({}) => {
             <img src={logo} alt="" />
           </div>
           <div className="logo">
-            <img src={logo} alt="" />
+            <img src={logo11} alt="" />
           </div>
         </div>
       </div>
