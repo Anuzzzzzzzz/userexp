@@ -172,9 +172,9 @@ const travelCards = [
     img3: nepal2,
     img4: nepal3,
     map: mapimg3,
-    url: "antalya",
+    url: "Nepal",
     title: "Nepal",
-    destination: "Asia",
+    destination: "Nepal",
     description:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga hic quas veritatis blanditiis officiis recusandae deleniti dolor ullam voluptatibus! Quaerat.",
     groupSize: 5,
