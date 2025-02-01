@@ -26,6 +26,7 @@ const Register = () => {
   };
 
   const handleClickButton = async () => {
+    // Validate all input fields
     if (!email || !password || !confirmPassword || !name) {
       toaster.push(
         <Notification>
@@ -41,6 +42,7 @@ const Register = () => {
       return;
     }
 
+    // Check if passwords match
     if (password !== confirmPassword) {
       toaster.push(
         <Notification>
@@ -57,10 +59,15 @@ const Register = () => {
     }
 
     try {
+      // Perform the registration request
       const res = await register({ name, email, password }).unwrap();
       console.log(res);
+      
+      // Dispatch credentials to redux store and navigate to home
       dispatch(setCredantials({ ...res }));
       navigate("/");
+
+      // Show success toaster
       toaster.push(
         <Notification>
           <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
@@ -72,6 +79,7 @@ const Register = () => {
         }
       );
     } catch (error: any) {
+      // Handle errors during registration and show appropriate message
       toaster.push(
         <Notification>
           <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
@@ -86,6 +94,7 @@ const Register = () => {
     }
   };
 
+  // Redirect to homepage if user is already logged in
   useEffect(() => {
     if (user) {
       navigate("/");
