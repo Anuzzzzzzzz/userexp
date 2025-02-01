@@ -1,12 +1,12 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import "./Login.scss";
-import { useDispatch, useSelector } from "react-redux";
-import { login as setCredantials } from "../../store/features/authSlice/authSlice";
-import { useToaster, Notification } from "rsuite";
 import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 import { FaExclamationCircle } from "react-icons/fa";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { Notification, useToaster } from "rsuite";
+import { login as setCredantials } from "../../store/features/authSlice/authSlice";
 import { useLoginMutation } from "../../store/features/usersApiSlice/usersApiSlice";
+import "./Login.scss";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -46,7 +46,7 @@ const Login = () => {
     const isValidEmail = /\S+@\S+\.\S+/.test(email);
     if (!isValidEmail) {
       toaster.push(
-        <Notification type="error" header="Invalid email adress">
+        <Notification type="error" header="Invalid email address">
           <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
             <h6>Please enter a valid email.</h6>
           </div>
@@ -59,9 +59,13 @@ const Login = () => {
     }
 
     try {
+      // Optimistic UI update: Assume success and navigate immediately
+      dispatch(setCredantials({ email })); // You might want to store user data if available
+      navigate("/");
+
       const res = await login({ email, password }).unwrap();
       dispatch(setCredantials({ ...res }));
-      navigate("/");
+
       toaster.push(
         <Notification>
           <div className="notification-content">
@@ -77,7 +81,7 @@ const Login = () => {
         <Notification type="error" header="Error">
           <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
             <h6>
-              {error.data.message || "An error occurred. Please try again."}
+              {error?.data?.message || "An error occurred. Please try again."}
             </h6>
           </div>
         </Notification>,
@@ -109,7 +113,10 @@ const Login = () => {
           <input
             type="email"
             placeholder="Email"
+            value={email}
             onChange={(e) => setEmail(e.target.value)}
+            aria-label="Email Address"
+            required
           />
         </div>
         <div className="input-space">
@@ -118,6 +125,8 @@ const Login = () => {
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            aria-label="Password"
+            required
           />
           <button onClick={handleShowPassword} className="show-password">
             {showPassword ? "Hide" : "Show"}
@@ -132,7 +141,11 @@ const Login = () => {
           onClick={handleClickButton}
           className="button"
         >
-          {isLoading ? "Loading..." : "Login"}
+          {isLoading ? (
+            <div className="loading-spinner"></div> // Loading spinner component
+          ) : (
+            "Login"
+          )}
         </button>
       </motion.div>
     </div>

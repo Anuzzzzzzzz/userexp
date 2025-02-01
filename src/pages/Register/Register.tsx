@@ -1,12 +1,12 @@
-import "./Register.scss";
-import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import { FaExclamationCircle } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
-import { useRegisterMutation } from "../../store/features/usersApiSlice/usersApiSlice";
-import { login as setCredantials } from "../../store/features/authSlice/authSlice";
 import { useNavigate } from "react-router-dom";
 import { Notification, toaster } from "rsuite";
-import { FaExclamationCircle } from "react-icons/fa";
+import { login as setCredantials } from "../../store/features/authSlice/authSlice";
+import { useRegisterMutation } from "../../store/features/usersApiSlice/usersApiSlice";
+import "./Register.scss";
 
 const Register = () => {
   const [email, setEmail] = useState<string>("");
