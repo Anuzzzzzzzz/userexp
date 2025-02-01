@@ -51,98 +51,97 @@ import paris from "./travelimg/paris.webp";
 import paris2 from "./travelimg/paris2.webp";
 import paris3 from "./travelimg/paris3.webp";
 import paris4 from "./travelimg/paris4.webp";
+
 const cards = [
   {
     size: 2,
-    title: "OPEN A WORLD OF POSSIBILITIES",
-    p: "Lorem ipsum dolor sit amet.",
-    button: "Browse by destination",
+    title: "Open a World of Possibilities",
+    p: "Discover new destinations and unique travel experiences.",
+    button: "Browse by Destination",
     img: img1,
   },
   {
     size: 1,
-    title: "Save up to $200 per person",
-    p: "Lorem ipsum dolor sit amet.",
-    button: "Browse by destination",
+    title: "Save up to $200 Per Person",
+    p: "Book now and enjoy exclusive discounts on your trip.",
+    button: "Browse by Destination",
     img: "",
   },
   {
     size: 1,
-    title: "Off-season travel",
-    p: "Lorem ipsum dolor sit amet.Lorem ipsum dolor sit amet.Lorem ipsum dolor sit amet.Lorem ipsum dolor sit amet.",
-    button: "Find your off-season tour",
+    title: "Off-Season Travel",
+    p: "Experience fewer crowds and better prices when you travel during the off-season.",
+    button: "Find Your Off-Season Tour",
     img: img3,
   },
   {
     size: 1,
     title: "Grand Tours",
-    p: "Lorem ipsum dolor sit amet.Lorem ipsum dolor sit amet.Lorem ipsum dolor sit amet.Lorem ipsum dolor sit amet.",
+    p: "Embark on an unforgettable journey with our expertly curated grand tours.",
     button: "Shop Grand Tours",
     img: img4,
   },
   {
     size: 1,
-    title: "New & trending",
-    p: "Lorem ipsum dolor sit amet.Lorem ipsum dolor sit amet.Lorem ipsum dolor sit amet.Lorem ipsum dolor sit amet.",
-    button: "Check out what's new",
+    title: "New & Trending",
+    p: "Explore the latest travel trends and newly added destinations.",
+    button: "Check Out What's New",
     img: img5,
   },
 ];
 
 const sliderCards = [
   {
-    title: "Experiential travel made easy",
-    description: "You dream it. We’ll take care of every last detail.",
-    button: "Find out how we do it",
+    title: "Experiential Travel Made Easy",
+    description: "You dream it, and we’ll take care of every last detail.",
+    button: "Find Out How We Do It",
   },
   {
-    title: "Pick your perfect trip",
-    description:
-      "Lorem ipsum dolor sit amet.Lorem ipsum dolor sit amet.Lorem ipsum dolor sit amet.Lorem ipsum dolor sit amet.",
+    title: "Pick Your Perfect Trip",
+    description: "Choose from a variety of destinations tailored to your travel preferences.",
     button: "",
   },
   {
-    title: "Put just $299 down",
-    description:
-      "Lorem ipsum dolor sit amet.Lorem ipsum dolor sit amet.Lorem ipsum dolor sit amet.Lorem ipsum dolor sit amet.",
+    title: "Reserve Your Spot for Just $299",
+    description: "Secure your dream trip with an affordable deposit.",
     button: "",
   },
   {
-    title: "Prep your packing list",
-    description:
-      "Lorem ipsum dolor sit amet.Lorem ipsum dolor sit amet.Lorem ipsum dolor sit amet.Lorem ipsum dolor sit amet.Lorem ipsum dolor sit amet.Lorem ipsum dolor sit amet.",
+    title: "Prepare Your Packing List",
+    description: "Get ready for your adventure with our expert travel tips and packing guides.",
     button: "",
   },
   {
-    title: "Say bon voyage!",
-    description:
-      "Lorem ipsum dolor sit amet.Lorem ipsum dolor sit amet.Lorem ipsum dolor sit amet.",
+    title: "Say Bon Voyage!",
+    description: "Embark on your journey and create unforgettable memories.",
     button: "",
   },
 ];
+
 const biggerCards = [
   {
     size: 1,
-    title: "Traveling with 7+",
-    p: "You’ll enjoy some pretty sweet perksalong the way.",
-    button: "Browse by destination",
+    title: "Traveling with a Group of 7+",
+    p: "Enjoy exclusive perks and discounts when you travel with a group.",
+    button: "Browse by Destination",
     img: img2,
   },
   {
     size: 1,
-    title: "Ready, set, get inspired",
-    p: "Lorem ipsum dolor sit amet. Destination and real traveler stories to inspire and enrich your next trip.",
-    button: "Browse by destination",
+    title: "Get Inspired for Your Next Trip",
+    p: "Discover real traveler stories and exciting destinations to spark your wanderlust.",
+    button: "Browse by Destination",
     img: img6,
   },
   {
     size: 1,
-    title: "Save up to $200 with Specials",
-    p: "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quia, quibusdam. Lorem, ipsum dolor sit amet consectetur adipisicing elit. Culpa, odit! Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quia, quibusdam.",
-    button: "Shop last-minute deals",
+    title: "Save Up to $200 with Special Offers",
+    p: "Take advantage of limited-time deals and last-minute travel discounts.",
+    button: "Shop Last-Minute Deals",
     img: "",
   },
 ];
+
 
 const travelCards = [
   {
