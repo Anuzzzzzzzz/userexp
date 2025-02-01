@@ -1,5 +1,5 @@
-import "./AboutUs.scss";
 import { motion } from "framer-motion";
+import "./AboutUs.scss";
 
 const AboutUs = ({}) => {
   const container = {
@@ -31,7 +31,7 @@ const AboutUs = ({}) => {
       >
         <motion.h3 variants={item}>Project Description:</motion.h3>
         <motion.p variants={item}>
-          Hello, I'm Bartu Çakır, and I'm working on projects to improve myself
+          Hello, I'm Anuj Paudel, and I'm working on this project to improve myself
           in frontend development. In this project, I used technologies such as
           React, Redux, React Router v6, TypeScript, RSuite, Framer Motion, and
           SCSS.

@@ -51,21 +51,21 @@ const Footer = () => {
       <div className="footer-middle-side">
         <div className="inner-footer-middle-side">
           <div className="social-media-icons">
-            <Link to="https://facebook.com" className="icon">
+            <a href="https://facebook.com" className="icon" target="_blank" rel="noopener noreferrer">
               <BiLogoFacebook size={25} />
-            </Link>
-            <Link to="https://twitter.com" className="icon">
+            </a>
+            <a href="https://twitter.com" className="icon" target="_blank" rel="noopener noreferrer">
               <RiTwitterXLine size={25} />
-            </Link>
-            <Link to="https://instagram.com" className="icon">
+            </a>
+            <a href="https://instagram.com" className="icon" target="_blank" rel="noopener noreferrer">
               <AiOutlineInstagram size={25} />
-            </Link>
-            <Link to="https://pinterest.com" className="icon">
+            </a>
+            <a href="https://pinterest.com" className="icon" target="_blank" rel="noopener noreferrer">
               <BsPinterest size={25} />
-            </Link>
-            <Link to="https://youtube.com" className="icon">
+            </a>
+            <a href="https://youtube.com" className="icon" target="_blank" rel="noopener noreferrer">
               <AiFillYoutube size={25} />
-            </Link>
+            </a>
           </div>
         </div>
       </div>

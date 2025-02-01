@@ -1,10 +1,10 @@
-import "./TravelDeals.scss";
+import { motion, useAnimation } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import { AiOutlineDown } from "react-icons/ai";
+import { useSearchParams } from "react-router-dom";
 import TravelCard from "../../../components/TravelCard/TravelCard";
 import { travelCards } from "../home/cardsArray";
-import { AiOutlineDown } from "react-icons/ai";
-import { useState, useRef, useEffect } from "react";
-import { motion, useAnimation } from "framer-motion";
-import { useSearchParams } from "react-router-dom";
+import "./TravelDeals.scss";
 
 const TravelDeals = () => {
   const destinations = Array.from(
@@ -153,12 +153,16 @@ const TravelDeals = () => {
     <div className="travel-deals">
       <div className="travel-cards-container">
         <div className="titles">
-          <h1>Black Friday travel deals</h1>
-          <h2>The Season of Travel Sale</h2>
+          <h1>
+Pack and Go </h1>
+          <h2>The Season of Travel ✈️🌍</h2>
           <p>
-            Save up to $400 on trips to the shores of Costa del Sol, the grand
-            boulevards of Madrid, and beyond.† Plus, lean on our 24/7 On-Tour
-            Support team every step of the way.
+          Travel with confidence, knowing our 24/7 On-Tour Support is with you every step of the way. 🚀
+
+Unmissable deals. Unforgettable destinations. It’s time to pack and go! 🏝️🎒
+
+🔥 Book Your Escape Now 
+
           </p>
         </div>
         <div className="travels">
