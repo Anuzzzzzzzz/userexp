@@ -23,14 +23,15 @@ const Login = () => {
 
   useEffect(() => {
     if (user) {
-      navigate("/");
+      navigate("/"); // Redirect user if already logged in
     }
   }, [user, navigate]);
 
   const handleClickButton = async () => {
+    // Check if all fields are filled
     if (!email || !password) {
       toaster.push(
-        <Notification>
+        <Notification type="error" header="Missing Fields">
           <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
             <FaExclamationCircle className="error-icon" />
             <h6>Please fill in all fields.</h6>
@@ -43,6 +44,7 @@ const Login = () => {
       return;
     }
 
+    // Email validation regex
     const isValidEmail = /\S+@\S+\.\S+/.test(email);
     if (!isValidEmail) {
       toaster.push(
@@ -60,16 +62,17 @@ const Login = () => {
 
     try {
       // Optimistic UI update: Assume success and navigate immediately
-      dispatch(setCredantials({ email })); // You might want to store user data if available
+      dispatch(setCredantials({ email })); // Store email for now, enhance with full user data later
       navigate("/");
 
+      // Proceed with actual login request
       const res = await login({ email, password }).unwrap();
       dispatch(setCredantials({ ...res }));
 
       toaster.push(
-        <Notification>
-          <div className="notification-content">
-            <h6>Successfully logged in 🎉</h6>
+        <Notification type="success" header="Successfully Logged In">
+          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+            <h6>Welcome back! 🎉</h6>
           </div>
         </Notification>,
         {
@@ -78,7 +81,7 @@ const Login = () => {
       );
     } catch (error: any) {
       toaster.push(
-        <Notification type="error" header="Error">
+        <Notification type="error" header="Login Error">
           <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
             <h6>
               {error?.data?.message || "An error occurred. Please try again."}

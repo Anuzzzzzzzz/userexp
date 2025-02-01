@@ -1,15 +1,14 @@
-import { useEffect, useState } from "react";
-import "./Payment.scss";
-import { Button, Divider, Modal, Notification, useToaster } from "rsuite";
-import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { FaCcVisa } from "react-icons/fa";
-import { FaCcMastercard } from "react-icons/fa";
-import { useCreateTourMutation } from "../../src/store/features/tourApiSlice/tourApiSlice";
+import { useEffect, useState } from "react";
+import { FaCcMastercard, FaCcVisa } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import { Button, Divider, Modal, Notification, useToaster } from "rsuite";
 import {
   useCreatePaymentMutation,
   useGetUserPaymentsQuery,
 } from "../../src/store/features/paymentApiSlice/paymentApiSlice";
+import { useCreateTourMutation } from "../../src/store/features/tourApiSlice/tourApiSlice";
+import "./Payment.scss";
 
 type Props = {
   person: number;
@@ -38,25 +37,23 @@ const Payment = ({
   const navigate = useNavigate();
   const [cardType, setCardType] = useState<"visa" | "mastercard" | null>(null);
   const [saveCard, setSaveCard] = useState(false);
-  const [selectedSection, setSelectedSection] = useState<
-    "credit" | "paypal" | null
-  >("credit");
+  const [selectedSection, setSelectedSection] = useState<"credit" | "Khalti" | null>("credit");
   const [paymentInfos, setPaymentInfos] = useState<{
     cardNumber: string;
     nameSurname: string;
     email: string;
     expDate: string;
     cvv: string;
-    paypalNameSurname: string;
-    paypalEmail: string;
+    khaltiNameSurname: string;
+    khaltiEmail: string;
   }>({
     cardNumber: "",
     nameSurname: "",
     email: "",
     expDate: "",
     cvv: "",
-    paypalNameSurname: "",
-    paypalEmail: "",
+    khaltiNameSurname: "",
+    khaltiEmail: "",
   });
 
   const [createTour, { isLoading }] = useCreateTourMutation();
@@ -72,21 +69,11 @@ const Payment = ({
         email: payments[0].email,
         expDate: payments[0].expDate,
         cvv: payments[0].cvv,
-        paypalNameSurname: payments[0].paypalNameSurname,
-        paypalEmail: payments[0].paypalEmail,
-      } as {
-        cardNumber: string;
-        nameSurname: string;
-        email: string;
-        expDate: string;
-        cvv: string;
-        paypalNameSurname: string;
-        paypalEmail: string;
+        khaltiNameSurname: payments[0].khaltiNameSurname,
+        khaltiEmail: payments[0].khaltiEmail,
       });
     }
   }, [payments]);
-
-  console.log("payments", paymentInfos);
 
   const checkCardType = (number: string) => {
     if (/^4/.test(number)) {
@@ -97,8 +84,8 @@ const Payment = ({
       setCardType(null);
     }
   };
-  const parsedDates = JSON.parse(JSON.stringify(date));
 
+  const parsedDates = JSON.parse(JSON.stringify(date));
   const formattedDates = parsedDates.map((dateString: string) => {
     const date = new Date(dateString);
     const year = date.getFullYear();
@@ -135,7 +122,7 @@ const Payment = ({
         paymentInfos.email &&
         paymentInfos.expDate &&
         paymentInfos.nameSurname) ||
-      (paymentInfos.paypalEmail && paymentInfos.paypalNameSurname)
+      (paymentInfos.khaltiEmail && paymentInfos.khaltiNameSurname)
     ) {
       const isValidEmail = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
       if (
@@ -145,8 +132,8 @@ const Payment = ({
         displayEmailErrorNotification();
         return;
       } else if (
-        selectedSection === "paypal" &&
-        !isValidEmail.test(paymentInfos.paypalEmail)
+        selectedSection === "Khalti" &&
+        !isValidEmail.test(paymentInfos.khaltiEmail)
       ) {
         displayEmailErrorNotification();
         return;
@@ -167,8 +154,8 @@ const Payment = ({
             email: paymentInfos.email,
             expDate: paymentInfos.expDate,
             cvv: paymentInfos.cvv,
-            paypalNameSurname: paymentInfos.paypalNameSurname,
-            paypalEmail: paymentInfos.paypalEmail,
+            khaltiNameSurname: paymentInfos.khaltiNameSurname,
+            khaltiEmail: paymentInfos.khaltiEmail,
           }).unwrap();
           console.log("resPayment", resPayment);
         }
@@ -180,8 +167,8 @@ const Payment = ({
           email: "",
           expDate: "",
           cvv: "",
-          paypalNameSurname: "",
-          paypalEmail: "",
+          khaltiNameSurname: "",
+          khaltiEmail: "",
         });
         navigate("/");
         return toaster.push(
@@ -222,7 +209,7 @@ const Payment = ({
       onClose={() => setOpenPayment(false)}
     >
       <Modal.Header>
-        <Modal.Title>Payment</Modal.Title>,
+        <Modal.Title>Payment</Modal.Title>
         <p>Please fill in the requested information</p>
       </Modal.Header>
       <Modal.Body>
@@ -297,16 +284,13 @@ const Payment = ({
                               .replace(regex, "$1 ")
                               .trim();
                             target.value = formatted;
-                            if (position !== null) {
-                              if (originalValue.length < target.value.length) {
-                                position += 1;
-                              }
-                              target.selectionEnd = position;
+                            checkCardType(target.value);
+                            if (position > target.value.length) {
+                              position = target.value.length;
                             }
+                            target.setSelectionRange(position, position);
                           }}
-                          placeholder="5134 5678 9012 3456"
                           onChange={(e) => {
-                            checkCardType(e.target.value);
                             setPaymentInfos({
                               ...paymentInfos,
                               cardNumber: e.target.value,
@@ -316,245 +300,155 @@ const Payment = ({
                       </div>
                     </div>
                     <div className="col">
-                      <label htmlFor="cardName">Name on Card</label>
+                      <label htmlFor="nameSurname">Name Surname</label>
                       <input
                         type="text"
-                        id="cardName"
+                        id="nameSurname"
                         value={paymentInfos.nameSurname}
-                        placeholder="John Smith"
-                        onChange={(e) =>
+                        onChange={(e) => {
                           setPaymentInfos({
                             ...paymentInfos,
                             nameSurname: e.target.value,
-                          })
-                        }
+                          });
+                        }}
                       />
                     </div>
                   </div>
-                  <div className="row row-s">
+                  <div className="row">
                     <div className="col">
-                      <label htmlFor="zipCode">Email</label>
+                      <label htmlFor="expDate">Expiration Date</label>
                       <input
-                        type="email"
-                        id="zipCode"
-                        value={paymentInfos.email}
-                        placeholder="test@gmail.com"
-                        onChange={(e) =>
+                        type="text"
+                        id="expDate"
+                        placeholder="MM/YY"
+                        maxLength={5}
+                        value={paymentInfos.expDate}
+                        onInput={(e) => {
+                          const target = e.target as HTMLInputElement;
+                          let position = target.selectionEnd;
+                          const originalValue = target.value;
+                          const regex = new RegExp(/(\d{2})/g);
+                          const onlyNumbers = originalValue.replace(
+                            /[^\d]/g,
+                            ""
+                          );
+                          const formatted = onlyNumbers
+                            .replace(regex, "$1/")
+                            .trim();
+                          target.value = formatted;
+                          if (position > target.value.length) {
+                            position = target.value.length;
+                          }
+                          target.setSelectionRange(position, position);
+                        }}
+                        onChange={(e) => {
                           setPaymentInfos({
                             ...paymentInfos,
-                            email: e.target.value,
-                          })
-                        }
+                            expDate: e.target.value,
+                          });
+                        }}
                       />
                     </div>
-                    <div className="col-s">
-                      <div className="box-s">
-                        <label htmlFor="expDate">Expiration</label>
-                        <input
-                          type="text"
-                          id="expDate"
-                          value={paymentInfos.expDate}
-                          placeholder="MM/YY"
-                          maxLength={5}
-                          onInput={(e) => {
-                            const target = e.target as HTMLInputElement;
-                            let position = target.selectionEnd;
-                            const originalValue = target.value;
-                            const regex = new RegExp(/(\d{2})(\d{2})/g);
-                            const onlyNumbers = originalValue.replace(
-                              /[^\d]/g,
-                              ""
-                            );
-                            const formatted = onlyNumbers
-                              .replace(regex, "$1/$2")
-                              .trim();
-                            target.value = formatted;
-                            if (position !== null) {
-                              if (originalValue.length < target.value.length) {
-                                position += 1;
-                              }
-                              target.selectionEnd = position;
-                            }
-                          }}
-                          onChange={(e) =>
-                            setPaymentInfos({
-                              ...paymentInfos,
-                              expDate: e.target.value,
-                            })
-                          }
-                        />
-                      </div>
-                      <div className="box-s">
-                        <label htmlFor="cvv">CVV</label>
-                        <input
-                          type="text"
-                          id="cvv"
-                          value={paymentInfos.cvv}
-                          placeholder="123"
-                          maxLength={4}
-                          onInput={(e) => {
-                            const inputValue = (e.target as HTMLInputElement)
-                              .value;
-                            const numericValue = inputValue.replace(/\D/g, ""); // Remove non-numeric characters
-                            (e.target as HTMLInputElement).value = numericValue;
-                          }}
-                          onChange={(e) =>
-                            setPaymentInfos({
-                              ...paymentInfos,
-                              cvv: e.target.value,
-                            })
-                          }
-                        />
-                      </div>
+                    <div className="col">
+                      <label htmlFor="cvv">CVV</label>
+                      <input
+                        type="text"
+                        id="cvv"
+                        maxLength={3}
+                        value={paymentInfos.cvv}
+                        onChange={(e) => {
+                          setPaymentInfos({
+                            ...paymentInfos,
+                            cvv: e.target.value,
+                          });
+                        }}
+                      />
                     </div>
                   </div>
-                  <div className="save-card-checkbox">
+                  <Divider />
+                  <div className="checkbox">
                     <input
                       type="checkbox"
                       id="saveCard"
-                      onChange={() => setSaveCard(!saveCard)}
                       checked={saveCard}
+                      onChange={() => setSaveCard(!saveCard)}
                     />
                     <label htmlFor="saveCard">
-                      Save card for future payments
+                      Save Card Information for Future Payments
                     </label>
                   </div>
                 </motion.div>
               )}
             </div>
-            <div className="paypal">
-              <div className="select-paypal">
+            <div className="Khalti">
+              <div className="select-Khalti">
                 <div className="left">
                   <input
                     type="radio"
                     name="paymentOption"
-                    id="paymentOption"
-                    value="paypal"
-                    onChange={() => setSelectedSection("paypal")}
+                    value="Khalti"
+                    id="KhaltiOption"
+                    onChange={() => setSelectedSection("Khalti")}
                   />
-                  <label htmlFor="paymentOption">Paypal</label>
-                  <p>Secure online payment through the Paypal portal</p>
-                </div>
-                <div className="right">
-                  <img
-                    src="https://1000logos.net/wp-content/uploads/2021/04/Paypal-logo.png"
-                    alt=""
-                  />
+                  <label htmlFor="KhaltiOption">Khalti</label>
+                  <p>Secure transfer using your Khalti account</p>
                 </div>
               </div>
-              {selectedSection === "paypal" && (
+              {selectedSection === "Khalti" && (
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.5 }}
-                  className="paypal-input"
+                  className="inputs"
                 >
                   <Divider />
-                  <div className="name-surname">
-                    <label htmlFor="nameSurname">Name & Surname</label>
-                    <input
-                      type="text"
-                      id="nameSurname"
-                      value={paymentInfos.paypalNameSurname}
-                      placeholder="John Smith"
-                      onChange={(e) =>
-                        setPaymentInfos({
-                          ...paymentInfos,
-                          paypalNameSurname: e.target.value,
-                        })
-                      }
-                    />
-                  </div>
-                  <div className="input">
-                    <label htmlFor="email">Email</label>
-                    <input
-                      type="email"
-                      id="email"
-                      value={paymentInfos.paypalEmail}
-                      placeholder="test@gmail.com"
-                      onChange={(e) =>
-                        setPaymentInfos({
-                          ...paymentInfos,
-                          paypalEmail: e.target.value,
-                        })
-                      }
-                    />
+                  <div className="row">
+                    <div className="col">
+                      <label htmlFor="khaltiNameSurname">Name Surname</label>
+                      <input
+                        type="text"
+                        id="khaltiNameSurname"
+                        value={paymentInfos.khaltiNameSurname}
+                        onChange={(e) => {
+                          setPaymentInfos({
+                            ...paymentInfos,
+                            khaltiNameSurname: e.target.value,
+                          });
+                        }}
+                      />
+                    </div>
+                    <div className="col">
+                      <label htmlFor="khaltiEmail">Email</label>
+                      <input
+                        type="email"
+                        id="khaltiEmail"
+                        value={paymentInfos.khaltiEmail}
+                        onChange={(e) => {
+                          setPaymentInfos({
+                            ...paymentInfos,
+                            khaltiEmail: e.target.value,
+                          });
+                        }}
+                      />
+                    </div>
                   </div>
                 </motion.div>
               )}
             </div>
           </div>
         </div>
-        <div className="right-card">
-          <div className="title">
-            <h3>Payment Infos</h3>
-          </div>
-          <div>
-            <div className="row">
-              <div className="col">
-                <h5>Name</h5>
-                <p>{nameSurname}</p>
-              </div>
-              <div className="col col-right">
-                <h5>Event Date</h5>
-                <p>{dateRange}</p>
-              </div>
-            </div>
-            <Divider />
-            <div className="row">
-              <div className="col">
-                <h5>Event Ticket</h5>
-                <p>
-                  {ticket === "Himself" ? `${ticket} = 0$` : `${ticket} = 100$`}
-                </p>
-              </div>
-              <div className="col col-right">
-                <h5>Event Price</h5>
-                <p>{onePrice} €</p>
-              </div>
-            </div>
-            <div className="row">
-              <div className="col">
-                <h5>Email</h5>
-                <p>{email}</p>
-              </div>
-              <div className="col col-right">
-                <h5>Day Difference</h5>
-                <p>{dayDifference} days</p>
-              </div>
-            </div>
-          </div>
-          <Divider />
-          <div className="row">
-            <div className="col">
-              <h5>Person</h5>
-              <p>{person}</p>
-            </div>
-            <div className="col col-right">
-              <h5>Total</h5>
-              <p>
-                ${onePrice * person * dayDifference}{" "}
-                {ticket === "Our" ? "+$100" : ""}
-              </p>
-            </div>
-          </div>
-          <div className="buttons">
-            <Button
-              onClick={handlePaymentSubmit}
-              appearance="primary"
-              color="green"
-              onSubmit={handlePaymentSubmit}
-              loading={isLoading}
-            >
-              Make Payment
-            </Button>
-            <Button onClick={() => setOpenPayment(false)} appearance="default">
-              Cancel
-            </Button>
-          </div>
-        </div>
       </Modal.Body>
+      <Modal.Footer>
+        <Button
+          appearance="primary"
+          onClick={handlePaymentSubmit}
+          loading={isLoading}
+        >
+          Pay Now
+        </Button>
+        <Button onClick={() => setOpenPayment(false)}>Cancel</Button>
+      </Modal.Footer>
     </Modal>
   );
 };

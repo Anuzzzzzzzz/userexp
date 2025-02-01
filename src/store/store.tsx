@@ -1,9 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
-import searchSlice from "./features/search/searchSlice";
-import userReducer from "./features/authSlice/authSlice";
 import { apiSlice } from "./features/apiSlice/apiSlice";
-import { tourApiSlice } from "./features/tourApiSlice/tourApiSlice";
+import userReducer from "./features/authSlice/authSlice";
 import { paymentApiSlice } from "./features/paymentApiSlice/paymentApiSlice";
+import searchSlice from "./features/search/searchSlice";
+import { tourApiSlice } from "./features/tourApiSlice/tourApiSlice";
 
 export const store = configureStore({
   reducer: {

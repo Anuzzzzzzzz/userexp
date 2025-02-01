@@ -1,12 +1,13 @@
 export interface Payment {
+  khaltiEmail: string;
+  khaltiNameSurname: string;
   id: string;
   cardNumber: string;
   nameSurname: string;
   email: string;
   expDate: string;
   cvv: string;
-  paypalNameSurname: string;
-  paypalEmail: string;
+  khaltiPhone: string; // Replace paypal fields with Khalti fields
 }
 
 export interface CreatePaymentRequest {
@@ -15,8 +16,7 @@ export interface CreatePaymentRequest {
   email: string;
   expDate: string;
   cvv: string;
-  paypalNameSurname: string;
-  paypalEmail: string;
+  khaltiPhone: string; // Khalti phone field instead of PayPal
 }
 
 export interface DeletePaymentRequest {
