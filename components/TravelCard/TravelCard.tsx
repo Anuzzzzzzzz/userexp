@@ -1,15 +1,15 @@
+import { motion, useAnimation, useInView } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { AiOutlineHeart } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import {
+  selectFavoriteCards,
   selectUser,
   toggleFavoriteCard,
-  selectFavoriteCards,
 } from "../../src/store/features/authSlice/authSlice";
-import { useNavigate } from "react-router-dom";
-import { motion, useInView, useAnimation } from "framer-motion";
-import "./TravelCard.scss";
 import { useUpdateUserMutation } from "../../src/store/features/usersApiSlice/usersApiSlice";
+import "./TravelCard.scss";
 
 type TravelCards = {
   id: number;
@@ -131,7 +131,7 @@ const TravelCard = ({
         <div className="text-container">
           <p className="title">{card.title}</p>
           <p className="description">{card.description}</p>
-          <p className="description2">Fuga hic quas veritatis blanditiis.</p>
+          <p className="description2">Escape here from the truths of flattery.</p>
           <div className="bottom-row">
             <div className="prices">
               <span className="old-price">

@@ -1,97 +1,154 @@
-import React, { useState } from "react";
+import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Button, Divider, Modal, Notification, useToaster } from "rsuite";
+import {
+  useCreatePaymentMutation,
+  useGetUserPaymentsQuery,
+} from "../../src/store/features/paymentApiSlice/paymentApiSlice";
+import { useCreateTourMutation } from "../../src/store/features/tourApiSlice/tourApiSlice";
+import "./Payment.scss";
 
-// Define the type for the payment request
-interface CreatePaymentRequest {
-  cardNumber: string;
+type Props = {
+  person: number;
+  date: Date;
   nameSurname: string;
-  expDate: string;
-  cvv: string;
-  khaltiNameSurname?: string;  // Added this line
-  khaltiEmail?: string;        // Added this line
-}
+  email: string;
+  ticket: string;
+  onePrice: number;
+  openPayment: boolean;
+  setOpenPayment: (open: boolean) => void;
+  location: string;
+};
 
-const Payment: React.FC = () => {
-  const [paymentInfos, setPaymentInfos] = useState<CreatePaymentRequest>({
+const Payment = ({
+  person,
+  date,
+  nameSurname,
+  email,
+  ticket,
+  onePrice,
+  openPayment,
+  setOpenPayment,
+  location,
+}: Props) => {
+  const toaster = useToaster();
+  const navigate = useNavigate();
+  const [cardType, setCardType] = useState<"visa" | "mastercard" | null>(null);
+  const [selectedSection, setSelectedSection] = useState<"credit" | "khalti" | null>("credit");
+  const [paymentInfos, setPaymentInfos] = useState({
     cardNumber: "",
     nameSurname: "",
+    email: "",
     expDate: "",
     cvv: "",
-    khaltiNameSurname: "",  // Initialize with empty string if needed
+    khaltiNumber: "",
   });
 
-  // Example use of position
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, selectionEnd } = event.target;
-    let position = selectionEnd ?? 0; // Null check for selectionEnd
+  const [createTour, { isLoading }] = useCreateTourMutation();
+  const [createPayment] = useCreatePaymentMutation();
+  const { data: payments } = useGetUserPaymentsQuery();
 
-    setPaymentInfos({
-      ...paymentInfos,
-      [name]: value,
-    });
+  useEffect(() => {
+    if (payments && payments.length > 0) {
+      setPaymentInfos({
+        cardNumber: payments[0].cardNumber,
+        nameSurname: payments[0].nameSurname,
+        email: payments[0].email,
+        expDate: payments[0].expDate,
+        cvv: payments[0].cvv,
+        khaltiNumber: payments[0].khaltiNumber,
+      });
+    }
+  }, [payments]);
 
-    // Add more logic if necessary
-    console.log("Cursor position: ", position);
+  const checkCardType = (number: string) => {
+    if (/^4/.test(number)) {
+      setCardType("visa");
+    } else if (/^5[1-5]/.test(number)) {
+      setCardType("mastercard");
+    } else {
+      setCardType(null);
+    }
   };
 
-  const handlePaymentSubmit = () => {
-    console.log(paymentInfos);
-
-    // Additional logic to handle payment
+  const handlePaymentSubmit = async () => {
+    if (
+      (paymentInfos.cardNumber &&
+        paymentInfos.cvv &&
+        paymentInfos.email &&
+        paymentInfos.expDate &&
+        paymentInfos.nameSurname) ||
+      (paymentInfos.khaltiNumber)
+    ) {
+      try {
+        await createTour({ date, person, nameSurname, email, ticket, location }).unwrap();
+        await createPayment(paymentInfos).unwrap();
+        setOpenPayment(false);
+        navigate("/");
+        toaster.push(<Notification>Payment Success!</Notification>, { placement: "topEnd" });
+      } catch (error) {
+        console.error(error);
+      }
+    } else {
+      toaster.push(<Notification>Payment Error! Please fill in all fields.</Notification>, { placement: "topEnd" });
+    }
   };
-
-  // Removed unused variables 'onePrice', 'dateRange', 'dayDifference'
 
   return (
-    <div className="payment-container">
-      <h2>Payment Information</h2>
-
-      <label htmlFor="nameSurname">Name and Surname</label>
-      <input
-        type="text"
-        id="nameSurname"
-        name="nameSurname"
-        value={paymentInfos.nameSurname}
-        onChange={handleInputChange}
-      />
-
-      <label htmlFor="cardNumber">Card Number</label>
-      <input
-        type="text"
-        id="cardNumber"
-        name="cardNumber"
-        value={paymentInfos.cardNumber}
-        onChange={handleInputChange}
-      />
-
-      <label htmlFor="expDate">Expiration Date</label>
-      <input
-        type="text"
-        id="expDate"
-        name="expDate"
-        value={paymentInfos.expDate}
-        onChange={handleInputChange}
-      />
-
-      <label htmlFor="cvv">CVV</label>
-      <input
-        type="text"
-        id="cvv"
-        name="cvv"
-        value={paymentInfos.cvv}
-        onChange={handleInputChange}
-      />
-
-      <label htmlFor="khaltiNameSurname">Khalti Name and Surname</label>
-      <input
-        type="text"
-        id="khaltiNameSurname"
-        name="khaltiNameSurname"
-        value={paymentInfos.khaltiNameSurname || ""}
-        onChange={handleInputChange}
-      />
-
-      <button onClick={handlePaymentSubmit}>Submit Payment</button>
-    </div>
+    <Modal open={openPayment} size="lg" onClose={() => setOpenPayment(false)}>
+      <Modal.Header>
+        <Modal.Title>Payment</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <div className="payment-options">
+          <div className="credit-card">
+            <input
+              type="radio"
+              name="paymentOption"
+              checked={selectedSection === "credit"}
+              onChange={() => setSelectedSection("credit")}
+            />
+            <label>Credit / Debit Card</label>
+            {selectedSection === "credit" && (
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                <Divider />
+                <input
+                  type="text"
+                  placeholder="Card Number"
+                  onChange={(e) => {
+                    checkCardType(e.target.value);
+                    setPaymentInfos({ ...paymentInfos, cardNumber: e.target.value });
+                  }}
+                />
+              </motion.div>
+            )}
+          </div>
+          <div className="khalti">
+            <input
+              type="radio"
+              name="paymentOption"
+              checked={selectedSection === "khalti"}
+              onChange={() => setSelectedSection("khalti")}
+            />
+            <label>Khalti</label>
+            {selectedSection === "khalti" && (
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                <Divider />
+                <input
+                  type="text"
+                  placeholder="Khalti Number"
+                  onChange={(e) => setPaymentInfos({ ...paymentInfos, khaltiNumber: e.target.value })}
+                />
+              </motion.div>
+            )}
+          </div>
+        </div>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button onClick={handlePaymentSubmit} loading={isLoading}>Pay Now</Button>
+      </Modal.Footer>
+    </Modal>
   );
 };
 
